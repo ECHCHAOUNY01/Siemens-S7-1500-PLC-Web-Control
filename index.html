@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PLC Control</title>
+</head>
+<body>
+    <h1>PLC Control Panel</h1>
+
+    <button onclick="sendWrite(true)">Stop</button>
+    <button onclick="sendWrite(false)">Start</button>
+
+    <p id="status"></p>
+
+    <script>
+        function sendWrite(value) {
+            fetch('/write', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    db: 10,
+                    start: 0,
+                    byte: 2,
+                    bit: 1,
+                    value: value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').textContent = data.result || data.error;
+            })
+            .catch(error => {
+                document.getElementById('status').textContent = 'Error: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>
